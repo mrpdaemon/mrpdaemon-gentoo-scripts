@@ -36,4 +36,7 @@ ESELECT_IDX=`eselect kernel list | grep "$VER_PREFIX"-gentoo"$VER_SUFFIX" | awk 
 
 eselect kernel set $ESELECT_IDX || { echo "Failed to set kernel via eselect"; exit 1; }
 
+# Record this kernel version in world file so it doesn't get depclean'ed
+emerge --noreplace =sys-kernel/gentoo-sources-$VERSION
+
 emerge @module-rebuild || { echo "Failed to build kernel modules"; exit 1; }
