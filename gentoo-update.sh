@@ -13,9 +13,7 @@ else
    DISTCC_CMD=""
 fi
 
-portage-cgroup 3 &
 ${DISTCC_CMD} emerge -avuDN --jobs --load-average 9 --with-bdeps=y @world || { echo "emerge failed"; exit 1;}
 emerge --ask --depclean || { echo "depclean failed"; exit 1;}
-portage-cgroup 3 &
 ${DISTCC_CMD} emerge -a1v --jobs --load-average 9 @preserved-rebuild || { echo "preserved-rebuild failed"; exit 1;}
 ionice -c3 revdep-rebuild -i -- --jobs --load-average 9 || { echo "revdep-rebuild failed"; exit 1;}
