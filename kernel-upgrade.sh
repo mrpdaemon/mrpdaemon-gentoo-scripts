@@ -22,6 +22,8 @@ cd $NEW_DIR
 
 make oldconfig || { echo "Failed to make oldconfig"; exit 1; }
 
+cp .config /etc/portage/mrpdaemon/hosts/`hostname`/kernel-config
+
 ionice -c3 nice -n19 make -j9 || { echo "Failed to build kernel"; exit 1; }
 
 ionice -c3 nice -n19 make modules_install || { echo "Failed to install modules"; exit 1; }
