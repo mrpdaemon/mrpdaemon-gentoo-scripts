@@ -4,6 +4,7 @@ PREXCLUDEPATH="/etc/portage/preserved-rebuild.exclude"
 
 if [ "$1" != "--no-sync" ] ; then
    layman -S || { echo "Layman failed"; exit 1;}
+   emerge --regen || { echo "emerge --regen failed"; exit 1;}
    eix-sync || { echo "eix-sync failed"; exit 1;}
 fi
 
