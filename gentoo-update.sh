@@ -19,6 +19,9 @@ case $key in
     -t|--test)
     DRY_RUN=true
     ;;
+    -p|--use-packages)
+    USE_PACKAGES=true
+    ;;
     *)
             # unknown option
     ;;
@@ -55,12 +58,16 @@ if [ "$DRY_RUN" = true ]; then
 fi
 
 if [ "$NO_SYNC" != true ] ; then
-   ${TEST_CMD} layman -S || { echo "Layman failed"; exit 1;}
-   ${TEST_CMD} emerge --regen ${JOBS_PARAMS}
-   ${TEST_CMD} eix-sync || { echo "eix-sync failed"; exit 1;}
+   ${TEST_CMD} emaint sync -a || { echo "emaint sync failed"; exit1;}
 fi
 
-${TEST_CMD} ${DISTCC_CMD} emerge -avuDN ${JOBS_PARAMS} --with-bdeps=y @world || { echo "emerge failed"; exit 1;}
+if [ "$USE_PACKAGES" = true ]; then
+   EMERGE_FLAGS="-auvDNk"
+else
+   EMERGE_FLAGS="-auvDN"
+fi
+
+${TEST_CMD} ${DISTCC_CMD} emerge ${EMERGE_FLAGS} ${JOBS_PARAMS} --with-bdeps=y --complete-graph=y --backtrack=300 @world || { echo "emerge failed"; exit 1;}
 ${TEST_CMD} emerge --ask --depclean || { echo "depclean failed"; exit 1;}
 
 if [ -e "$PREXCLUDEPATH" ]
