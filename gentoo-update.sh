@@ -58,7 +58,8 @@ if [ "$DRY_RUN" = true ]; then
 fi
 
 if [ "$NO_SYNC" != true ] ; then
-   ${TEST_CMD} emaint sync -a || { echo "emaint sync failed"; exit1;}
+   ${TEST_CMD} emaint sync -a || { echo "emaint sync failed"; exit 1;}
+   ${TEST_CMD} eix-update || { echo "eix update failed"; exit 1;}
 fi
 
 if [ "$USE_PACKAGES" = true ]; then
